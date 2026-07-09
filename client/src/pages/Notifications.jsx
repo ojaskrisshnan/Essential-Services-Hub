@@ -9,10 +9,13 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import CircularProgress from '@mui/material/CircularProgress';
+import IconButton from '@mui/material/IconButton';
 
 // Icons
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 
 import api from '../services/api';
 
@@ -48,6 +51,33 @@ const Notifications = () => {
     }
   };
 
+  const handleDeleteNotification = async (id) => {
+    try {
+      setLoading(true);
+      await api.delete(`/notifications/${id}`);
+      await fetchNotifications();
+    } catch (err) {
+      console.error(err);
+      alert('Failed to delete notification.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleClearAll = async () => {
+    if (!window.confirm('Are you sure you want to clear all notifications?')) return;
+    try {
+      setLoading(true);
+      await api.delete('/notifications');
+      await fetchNotifications();
+    } catch (err) {
+      console.error(err);
+      alert('Failed to clear notifications.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
@@ -64,16 +94,28 @@ const Notifications = () => {
             <NotificationsActiveIcon color="primary" />
             <Typography variant="h5" fontWeight="bold">Notification Center</Typography>
           </Box>
-          {notifications.some(n => !n.read) && (
-            <Button 
-              variant="outlined" 
-              color="primary" 
-              startIcon={<DoneAllIcon />}
-              onClick={handleMarkAllRead}
-            >
-              Mark all as read
-            </Button>
-          )}
+          <Box display="flex" gap={1.5}>
+            {notifications.some(n => !n.read) && (
+              <Button 
+                variant="outlined" 
+                color="primary" 
+                startIcon={<DoneAllIcon />}
+                onClick={handleMarkAllRead}
+              >
+                Mark all as read
+              </Button>
+            )}
+            {notifications.length > 0 && (
+              <Button 
+                variant="outlined" 
+                color="error" 
+                startIcon={<DeleteSweepIcon />}
+                onClick={handleClearAll}
+              >
+                Clear all
+              </Button>
+            )}
+          </Box>
         </Box>
         <Divider sx={{ mb: 2 }} />
 
@@ -95,6 +137,16 @@ const Notifications = () => {
                     borderLeft: notif.read ? 'none' : '4px solid',
                     borderColor: 'primary.main'
                   }}
+                  secondaryAction={
+                    <IconButton 
+                      edge="end" 
+                      aria-label="delete" 
+                      color="error"
+                      onClick={() => handleDeleteNotification(notif._id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  }
                 >
                   <ListItemText 
                     primary={notif.message} 
