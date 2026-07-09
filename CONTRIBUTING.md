@@ -1,6 +1,6 @@
-# Contributing to Essential Services Hub (Branch A Version)
+# Contributing to Essential Services Hub (Unified Version)
 
-Welcome to the team! We welcome all contributions on Branch A.
+Welcome to our project page! We welcome all contributions from Branch A and Branch B.
 
 Please follow these guidelines:
 1. Fork the repo.
