@@ -1,6 +1,6 @@
-# Contributing to Essential Services Hub
+# Contributing to Essential Services Hub (Branch B Edition)
 
-Welcome to the project! We love contributions.
+Welcome to our project page! We appreciate all contributions on Branch B.
 
 Please follow these guidelines:
 1. Fork the repo.
