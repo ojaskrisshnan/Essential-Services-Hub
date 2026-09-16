@@ -1,0 +1,54 @@
+# Essential Services Hub - Azure Pipeline
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+
+# Install Node.js
+- task: NodeTool@0
+  inputs:
+    versionSpec: '20.x'
+  displayName: 'Install Node.js'
+
+
+# Install Backend Dependencies
+- script: |
+    cd server
+    npm install
+  displayName: 'Install Backend Dependencies'
+
+
+# Install Frontend Dependencies
+- script: |
+    cd client
+    npm install
+  displayName: 'Install Frontend Dependencies'
+
+
+# Build React Frontend
+- script: |
+    cd client
+    npm run build
+  displayName: 'Build Frontend'
+
+
+# Publish Frontend Build
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: 'client/dist'
+    ArtifactName: 'frontend-build'
+    publishLocation: 'Container'
+  displayName: 'Publish Frontend Build'
+
+
+# Publish Backend
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: 'server'
+    ArtifactName: 'backend'
+    publishLocation: 'Container'
+  displayName: 'Publish Backend'
